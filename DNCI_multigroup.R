@@ -14,6 +14,8 @@
 ##              [IMPORTANT] : Repeat computation X (e.g. 1000) times to obtain mean values
 ##                            Effect can be strong if groups are strongly uneven
 
+## To contact me : corentingibert@gmail.com or annika.vilmi@gmail.com (feel free)
+
 DNCI_multigroup <- function(x, grouping,id = "no_name", Nperm = 1000, count = TRUE, symmetrize = FALSE, plotSIMPER = TRUE) {
   group.combinations <- combn(unique(sort(grouping)),2)
   
