@@ -1,11 +1,12 @@
 #########################################
 ########## HI and THANKS YOU ############
-###### FOR YOUR INTEREST IN PER #########
-#### -SIMPER AND DISPERSAL-NICHE ########
-####      -CONTINUUM INDEX       ########
+######## FOR YOUR INTEREST IN ###########
+########### PER-SIMPER AND ##############
+#### DISPERSAL-NICHE-CONTINUUM INDEX ####
+#########################################
 ################# BY ####################
 ## CORENTIN GIBERT AND GILLES ESCARGUEL #
-##### ANNIKA VILMA AND JIANJUN WANG #####
+##### ANNIKA VILMI AND JIANJUN WANG #####
 #########################################
 
 You can find in this zip/github file a
