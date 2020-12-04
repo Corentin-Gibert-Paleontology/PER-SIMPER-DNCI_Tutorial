@@ -3,6 +3,9 @@
 ##############################################################
 
 ### Loading library, functions, datas & working directory
+library(devtools)
+devtools::install_github("Corentin-Gibert-Paleontology/DNCImper") #DNCImper installation from GitHub repository
+
 library(vegan)
 library(plyr)
 library(ggplot2)
@@ -10,8 +13,8 @@ library(DNCImper)
 
 setwd("Your working directory")
 
-load("Data_Matrix_Tutorial.RData")
-load("Data_Group_Turorial.RData")
+load("Data_Matrix_Tutorial.RData") #Data already loaded with DNCImper package. Can be call like that: DNCImper::Matrix 
+load("Data_Group_Turorial.RData")  #Can be call like that: DNCImper::Group
 
 ################################################################################
 ##### PerSIMPER usage for 2 groups #############################################
