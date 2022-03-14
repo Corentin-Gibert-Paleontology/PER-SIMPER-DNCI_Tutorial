@@ -10,11 +10,11 @@
 #' @param dataType Need to be set for presence/absence or abundance data ("count"), default = "prab" (presence_absence)
 #' @param Nperm Number of permutation, default = 1000, should be change to 100 for robustness analysis
 #' @param plotSIMPER Display the SIMPER, PerSIMPER and E index plots, default = TRUE
-#' @examples A <- PerSIMPER_overall(Matrix, Group)
+#' @examples A <- DNCImper:::PerSIMPER_overall(Matrix, Group)
 #' @examples #where Matrix is a presence/absence matrix with taxa in column and sample in row
 #' @examples #and Group is a vector with length() == number of rows/samples in Matrix, 3 groups or more.
 #' @examples #
-#' @examples B <- PerSIMPER_overall(Matrix, Group, Nperm = 100, count = FALSE, plotSIMPER = FALSE)
+#' @examples B <- DNCImper:::PerSIMPER_overall(Matrix, Group, Nperm = 100, count = FALSE, plotSIMPER = FALSE)
 #' @examples #In this example, same data are analysed, with 100 permutations, with no countdown and no plots
 #'
 #'
@@ -287,6 +287,3 @@ PerSIMPER_overall <- function(matrixSIMP,
 
   return(ListResults)
 }
-
-
-
