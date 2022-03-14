@@ -14,11 +14,11 @@
 #' @param Nperm Number of permutation, default = 1000, should be change to 100 for robustness analysis
 #' @param plotSIMPER Display the SIMPER, PerSIMPER and E index plots, default = TRUE
 #' @param NbrReRun Number of iteration to obtain mean DNCI_overall values with even groups
-#' @examples A <- DNCI.ses_overall(Matrix, Group)
+#' @examples A <- DNCImper:::DNCI.ses_overall(Matrix, Group)
 #' @examples #where Matrix is a presence/absence matrix with taxa in column and sample in row
 #' @examples #and Group is a vector with length() == number of rows/samples in Matrix, 3 groups or more.
 #' @examples #
-#' @examples B <- DNCI.ses_overall(Matrix, Group, Nperm = 100, count = FALSE, plotSIMPER = FALSE)
+#' @examples B <- DNCImper:::DNCI.ses_overall(Matrix, Group, Nperm = 100, count = FALSE, plotSIMPER = FALSE)
 #' @examples #In this example, same data are analysed, with 100 permutations, with no countdown and no plots
 #'
 #'
@@ -72,7 +72,7 @@ DNCI.ses_overall_symmetrized <- function(Mat, Group, id = "no_name", NbrReRun = 
     if(length(Number_ofpairs[1,]) > 2){
       #Analyse_Pairs <- PerSIMPER_onMatrix(Mat_Sampled, Group_Sampled, NomCluster = LETTERS[Unik_group], NS = FALSE,
       #                                    overall = FALSE)
-      Analyse_Overall <- DNCI.ses_overall(Mat_Sampled, Group_Sampled, id = id, Nperm = Nperm, count = count)
+      Analyse_Overall <- DNCImper:::DNCI.ses_overall(Mat_Sampled, Group_Sampled, id = id, Nperm = Nperm, count = count)
 
       if(x == 1)
       {
