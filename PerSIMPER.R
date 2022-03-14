@@ -11,11 +11,11 @@
 #' @param dataType Need to be set for presence/absence or abundance data ("count"), default = "prab" (presence_absence)
 #' @param Nperm Number of permutation, default = 1000, should be change to 100 for robustness analysis
 #' @param plotSIMPER Display the SIMPER, PerSIMPER and E index plots, default = TRUE
-#' @examples A <- PerSIMPER(Matrix, Group)
+#' @examples A <- DNCImper:::PerSIMPER(Matrix, Group)
 #' @examples #where Matrix is a presence/absence matrix with taxa in column and sample in row
 #' @examples #and Group is a vector with length() == number of rows/samples in Matrix, 2 groups ONLY
 #' @examples #
-#' @examples B <- PerSIMPER(Matrix, Group, Nperm = 100, count = FALSE, plotSIMPER = FALSE)
+#' @examples B <- DNCImper:::PerSIMPER(Matrix, Group, Nperm = 100, count = FALSE, plotSIMPER = FALSE)
 #' @examples #In this example, same data are analysed, with 100 permutations, with no countdown and no plots
 #'
 #'
@@ -40,7 +40,9 @@ PerSIMPER <- function(matrixSIMP,
                           Nperm=1000,
                           plotSIMPER = TRUE){    # add the possibility to change the number of permutations
 
-
+library(vegan)
+library(ggplot2)
+library(dplyr)
   ################################################################################
   ## for every problems or questions, please contact me by mail or ResearchGate: ##
   ##### at corentingibert@gmail.com | corentin.gibert@univ-poitiers.fr ############
@@ -55,8 +57,8 @@ PerSIMPER <- function(matrixSIMP,
 
   #Arguments :
 
-  #matrixSIMP <- Stores the matrix to use in SIMPER analysis (i.e. the result
-  #of the presence/absence or the abundance distribution of taxa in at least 2 clusters of assemblies)
+  #matrixSIMP <- Stores the matrix to use in SIMPER analysis 
+  #(i.e. the presence/absence or the abundance distribution of taxa in at least 2 clusters of assemblages)
   # LOCALITIES in LINES
   # TAXA in COLUMNS
 
@@ -78,7 +80,31 @@ PerSIMPER <- function(matrixSIMP,
   #e.g. dataTYPE = "count"
 
   #Nperm <- number of matrix permutation
-
+  
+  ####### Start here 
+ 
+  ###### Change abundance data (dataTYPE = "count") to relative abundance within sites with 1 as min(abundance) for the rarest taxa
+  ###### This change is necessary A. for increasing the speed of swap algorithm, B. to increase comparability between datasets, C. because swap is impossible with non integer (< 1) values
+  if(dataTYPE == "count")
+  {
+    if(min(matrixSIMP[1,matrixSIMP[1,] != 0]) != 1)
+    {
+      print("Absolute abundance modified for relative abundance")
+      tempMatrix <- matrixSIMP
+      
+      for(i in 1:length(matrixSIMP[,1]))
+      {
+        diff0 <- which(matrixSIMP[i,] != 0)
+        min0 <- min(matrixSIMP[i, diff0])
+        newLine <- round(matrixSIMP[i, diff0] * (1/min0))
+        tempMatrix[i, diff0] <- newLine
+      }
+      
+      matrixSIMP <- tempMatrix
+      
+    }
+    
+  }
   AnaSimp <- simper(matrixSIMP, Groups)   # summary(AnaSimp)
   #Classical SIMPER analysis computed on the compared groups
 
@@ -124,11 +150,32 @@ PerSIMPER <- function(matrixSIMP,
     #Screen output of the number of iterations performed.
     #This option is used to indicate if the permutation function is unable to swap the matrix cells.
     #This incapacity is usually the result of a matrix too sparse in data (too many cells at 0).
+    SWAPcount <- 0
     repeat {
+      SWAPcount <- SWAPcount + 1
       v <- T
       dp4 <- permatfull(matrixSIMP, fixedmar = "columns", mtype = dataTYPE, times = 1)  #prab
       for(j in 1:length(dp4$perm[[1]][,2])) {
-        if(sum(dp4$perm[[1]][j,]) == 0){v <- FALSE}
+        if(sum(dp4$perm[[1]][j,]) == 0){v <- FALSE
+             
+        if(SWAPcount > 50)
+          {
+          ### Looking for cells to swap from rich taxa and rich locality to empty locality
+          tempColSum <- apply(dp4$perm[[1]], 2, sum)
+          tempHigh_Col <- which(apply(dp4$perm[[1]], 2, sum) > median(tempColSum))
+          tempMoove <- sample(tempHigh_Col, 1)
+          tempColSel <- dp4$perm[[1]][,tempMoove]
+          tempCel <-  which(tempColSel  > 0)
+          tempHigh_Row <- which(apply(dp4$perm[[1]][tempCel,], 1, sum) > median(apply(dp4$perm[[1]][tempCel,], 1, sum))) 
+          tempMoove2 <- sample(tempHigh_Row, 1)
+          
+          #### Swapping
+          dp4$perm[[1]][tempCel[tempMoove2], tempMoove] <- 0
+          dp4$perm[[1]][j,tempMoove] <- 1
+          v <- TRUE
+          }                                  
+                                       
+         }
         }
       if(v == TRUE) break
       }
@@ -269,6 +316,3 @@ if(plotSIMPER == TRUE)
 
   return(ListResults)
 }
-
-
-
