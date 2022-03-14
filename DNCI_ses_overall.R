@@ -12,11 +12,11 @@
 #' @param dataType Need to be set for presence/absence or abundance data ("count"), default = "prab" (presence_absence)
 #' @param Nperm Number of permutation, default = 1000, should be change to 100 for robustness analysis
 #' @param plotSIMPER Display the SIMPER, PerSIMPER and E index plots, default = TRUE
-#' @examples A <- DNCI.ses_overall(Matrix, Group)
+#' @examples A <- DNCImper:::DNCI.ses_overall(Matrix, Group)
 #' @examples #where Matrix is a presence/absence matrix with taxa in column and sample in row
 #' @examples #and Group is a vector with length() == number of rows/samples in Matrix, 3 groups or more.
 #' @examples #
-#' @examples B <- DNCI.ses_overall(Matrix, Group, Nperm = 100, count = FALSE, plotSIMPER = FALSE)
+#' @examples B <- DNCImper:::DNCI.ses_overall(Matrix, Group, Nperm = 100, count = FALSE, plotSIMPER = FALSE)
 #' @examples #In this example, same data are analysed, with 100 permutations, with no countdown and no plots
 #'
 #'
@@ -45,7 +45,7 @@
 DNCI.ses_overall <- function(x, grouping, id = "no_name", Nperm = 1000, count = TRUE, plotSIMPER = TRUE) { #this calculates the metric using PERSIMPER - now the output included DELTAd-n, sd of DELTA.d-n and confidence interval
   groups <- sort(unique(grouping))
   #results = PerSIMPER(x, grouping, log = TRUE, count = count)
-  results = PerSIMPER_overall(x, grouping, count = count, Nperm = Nperm, plotSIMPER = plotSIMPER)
+  results = DNCImper:::PerSIMPER_overall(x, grouping, count = count, Nperm = Nperm, plotSIMPER = plotSIMPER)
   E = results[["EcartCarreLog"]]
 
   #first calculate SES.d and SES.n based on E values from PERSIMPER
