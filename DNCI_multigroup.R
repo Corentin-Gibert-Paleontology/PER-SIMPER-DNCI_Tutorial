@@ -16,11 +16,11 @@
 #' @param dataType Need to be set for presence/absence or abundance data ("count"), default = "prab" (presence_absence)
 #' @param Nperm Number of permutation, default = 1000, should be change to 100 for robustness analysis
 #' @param plotSIMPER Display the SIMPER, PerSIMPER and E index plots, default = TRUE
-#' @examples A <- DNCI_multigroup(Matrix, Group)
+#' @examples A <- DNCImper:::DNCI_multigroup(Matrix, Group)
 #' @examples #where Matrix is a presence/absence matrix with taxa in column and sample in row
 #' @examples #and Group is a vector with length() == number of rows/samples in Matrix, 2 groups ONLY
 #' @examples #
-#' @examples B <- DNCI_multigroup(Matrix, Group, Nperm = 100, count = FALSE, plotSIMPER = FALSE)
+#' @examples B <- DNCImper:::DNCI_multigroup(Matrix, Group, Nperm = 100, count = FALSE, plotSIMPER = FALSE)
 #' @examples #In this example, same data are analysed, with 100 permutations, with no countdown and no plots
 #'
 #'
@@ -43,17 +43,10 @@
 ##              [IMPORTANT] : Repeat computation X (e.g. 1000) times to obtain mean values
 ##                            Effect can be strong if groups are strongly uneven
 
-DNCI_multigroup <- function(x, grouping,id = "no_name", Nperm = 1000, count = TRUE, symmetrize = FALSE, plotSIMPER = TRUE) {
+DNCI_multigroup <- function(x, grouping,id = "no_name", Nperm = 1000, count = TRUE, symmetrize = FALSE, plotSIMPER = TRUE, dataTYPE = "prab") {
   group.combinations <- combn(unique(sort(grouping)),2)
 
   ddelta <- NULL
-
-  if(NCOL(group.combinations) == 1) #If only 2 groups are compared
-  {
-    ddelta <- DNCI.ses(x , grouping,id=id, Nperm = Nperm, count = count, plotSIMPER = plotSIMPER)
-  }
-  if(NCOL(group.combinations) > 1)
-  {
 
     for(i in 1:NCOL(group.combinations)) {
       splitx <- split(x,grouping)
@@ -92,9 +85,9 @@ DNCI_multigroup <- function(x, grouping,id = "no_name", Nperm = 1000, count = TR
       if(length(which(rowSums(paired.x) == 0)) != 0){stop("ERROR : A row/sample is empty")}
       group.pair <- c(rep(group.combinations[1,i], NROW(splitx[[group.combinations[1,i]]])),
                       rep(group.combinations[2,i], NROW(splitx[[group.combinations[2,i]]])))
-      ddelta <- rbind(ddelta, DNCI.ses(x=paired.x,grouping=group.pair,id=id, Nperm = Nperm, count = count, plotSIMPER = plotSIMPER)) #here is the part that calculates the index based on PERSIMPER
+      ddelta <- rbind(ddelta, DNCImper:::DNCI.ses(x=paired.x,grouping=group.pair,id=id, Nperm = Nperm, count = count, plotSIMPER = plotSIMPER, dataTYPE = dataTYPE)) #here is the part that calculates the index based on PERSIMPER
     }
-  }
+  
   return(ddelta)
 }
 
